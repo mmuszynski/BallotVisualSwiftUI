@@ -6,11 +6,12 @@
 //
 
 import SwiftUI
+import Balloting
 
 @main
 struct BallotVisualApp: App {
     var body: some Scene {
-        DocumentGroup(newDocument: BallotVisualDocument()) { file in
+        DocumentGroup(newDocument: ElectionDocument(election: .example)) { file in
             ContentView(document: file.$document)
         }
     }

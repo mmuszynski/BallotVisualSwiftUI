@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		272117A92DF635A000D1B047 /* Balloting in Frameworks */ = {isa = PBXBuildFile; productRef = 272117A82DF635A000D1B047 /* Balloting */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		272117912DF6350900D1B047 /* BallotVisual.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BallotVisual.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -36,6 +40,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				272117A92DF635A000D1B047 /* Balloting in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +83,7 @@
 			);
 			name = BallotVisual;
 			packageProductDependencies = (
+				272117A82DF635A000D1B047 /* Balloting */,
 			);
 			productName = BallotVisual;
 			productReference = 272117912DF6350900D1B047 /* BallotVisual.app */;
@@ -91,7 +97,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1610;
-				LastUpgradeCheck = 1610;
+				LastUpgradeCheck = 1630;
 				TargetAttributes = {
 					272117902DF6350900D1B047 = {
 						CreatedOnToolsVersion = 16.1;
@@ -107,6 +113,9 @@
 			);
 			mainGroup = 272117882DF6350900D1B047;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				272117A72DF635A000D1B047 /* XCLocalSwiftPackageReference "../../Cocoa/Frameworks/Balloting" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 272117922DF6350900D1B047 /* Products */;
 			projectDirPath = "";
@@ -147,9 +156,9 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"BallotVisual/Preview Content\"";
-				DEVELOPMENT_TEAM = DF288G8ZJ6;
-				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_HARDENED_RUNTIME = NO;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = BallotVisual/Info.plist;
@@ -175,9 +184,9 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"BallotVisual/Preview Content\"";
-				DEVELOPMENT_TEAM = DF288G8ZJ6;
-				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_HARDENED_RUNTIME = NO;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = BallotVisual/Info.plist;
@@ -228,7 +237,9 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = DF288G8ZJ6;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -291,7 +302,9 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = DF288G8ZJ6;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -334,6 +347,20 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		272117A72DF635A000D1B047 /* XCLocalSwiftPackageReference "../../Cocoa/Frameworks/Balloting" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../Cocoa/Frameworks/Balloting;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		272117A82DF635A000D1B047 /* Balloting */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Balloting;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 272117892DF6350900D1B047 /* Project object */;
 }
