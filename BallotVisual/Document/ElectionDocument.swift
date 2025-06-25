@@ -9,7 +9,7 @@ import SwiftUI
 import UniformTypeIdentifiers
 import Balloting
 
-typealias Election = RankedElection<Int, String>
+typealias Election = RankedElection<Int, ICSOMCandidate>
 
 extension UTType {
     static var rankedChoiceElection: UTType {
@@ -19,18 +19,15 @@ extension UTType {
 
 struct ElectionDocument: FileDocument {
     var election: Election
-    var ballots: [Election.Ballot]
 
     static var readableContentTypes: [UTType] { [.rankedChoiceElection] }
     
     init () {
         self.election = Election(ballots: [])
-        self.ballots = []
     }
     
     init(election: Election) {
         self.election = election
-        self.ballots = election.ballots.sorted()
     }
 
     init(configuration: ReadConfiguration) throws {
@@ -51,8 +48,7 @@ struct ElectionDocument: FileDocument {
             }))
         }
 
-        election.ballots = ballots
-        self.ballots = election.ballots.sorted()
+        election.ballots = Array(ballots).sorted()
     }
     
     func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {

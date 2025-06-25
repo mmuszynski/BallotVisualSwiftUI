@@ -10,11 +10,11 @@ import Balloting
 
 struct CandidateRankingPicker: View {
     var maxRanking: Int
-    @Binding var ranking: RankedElection<Int, String>.Ballot.CandidateRanking
+    @Binding var ranking: Election.Ballot.CandidateRanking
     var imageBased: Bool = false
     
     var body: some View {
-        Picker(ranking.candidate, selection: $ranking.rank) {
+        Picker(ranking.candidate.name, selection: $ranking.rank) {
             Group {
                 if self.imageBased {
                     Image(systemName: "xmark.circle.fill")
@@ -33,10 +33,10 @@ struct CandidateRankingPicker: View {
 }
 
 #Preview {
-    @Previewable @State var jeff = RankedElection<Int, String>.Ballot.CandidateRanking(candidate: "Jeff", rank: nil)
-    @Previewable @State var stephen = RankedElection<Int, String>.Ballot.CandidateRanking(candidate: "Stephen", rank: nil)
-    @Previewable @State var maria = RankedElection<Int, String>.Ballot.CandidateRanking(candidate: "Maria", rank: nil)
-    @Previewable @State var claire = RankedElection<Int, String>.Ballot.CandidateRanking(candidate: "Claire", rank: nil)
+    @Previewable @State var jeff = Election.Ballot.CandidateRanking(candidate: "Jeff", rank: nil)
+    @Previewable @State var stephen = Election.Ballot.CandidateRanking(candidate: "Stephen", rank: nil)
+    @Previewable @State var maria = Election.Ballot.CandidateRanking(candidate: "Maria", rank: nil)
+    @Previewable @State var claire = Election.Ballot.CandidateRanking(candidate: "Claire", rank: nil)
     
     Form {
         CandidateRankingPicker(maxRanking: 5, ranking: $jeff)

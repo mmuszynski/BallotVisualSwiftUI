@@ -45,6 +45,9 @@ struct BallotEditor: View {
                     SegmentedBallotEditor(ballot: ballot, maxRank: maxRank)
                 }
             }
+        } else {
+            Text("No ballot selected")
+                .foregroundStyle(.tertiary)
         }
     }
 }
@@ -87,12 +90,6 @@ private struct MenuBallotEditor: View {
     @Previewable @State var selectedBallotID: Int?
     @Previewable @State var document = ElectionDocument.example
 
-    NavigationSplitView {
-        BallotList(ballots: document.ballots,
-                   selectedBallotID: $selectedBallotID)
-    } detail: {
-        if let id = selectedBallotID {
-            BallotEditor(ballot: $document.binding(for: id), maxRank: 6)
-        }
-    }
+    BallotList(election: $document.election,
+               selection: $selectedBallotID)
 }

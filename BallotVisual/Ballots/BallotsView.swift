@@ -41,8 +41,8 @@ struct BallotCardsView: View {
     @Previewable @State var selectedBallot: Election.Ballot.ID?
     
     NavigationSplitView {
-        BallotList(ballots: document.ballots,
-                   selectedBallotID: $selectedBallot)
+        BallotList(election: $document.election,
+                   selection: $selectedBallot)
     } detail: {
         
     }

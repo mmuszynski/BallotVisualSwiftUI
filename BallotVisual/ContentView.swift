@@ -8,27 +8,21 @@
 import SwiftUI
 import Balloting
 
-extension Binding where Value == ElectionDocument {
-    func binding(for selection: Election.Ballot.ID) -> Binding<Election.Ballot>? {
-        self.projectedValue.ballots.first {
-            $0.wrappedValue.id == selection
-        }
-    }
-}
-
 struct ContentView: View {
     @Binding var document: ElectionDocument
     @AppStorage("com.mmuszynski.BallotVisual.selectedSection")
-    var selectedSection: Section = .ballots
-    @State var selectedBallotID: Election.Ballot.ID?
-    @State var appState: AppState = .init()
+    var selectedSection: TabSection = .ballots
     
-    enum Section: String, Identifiable, CaseIterable {
+    @State var selectedBallotID: Election.Ballot.ID?
+    @State var selectedCandidate: ICSOMCandidate.ID?
+    
+    enum TabSection: String, Identifiable, CaseIterable {
         case information
-        case ballots
         case candidates
+        case ballots
+        case results
         
-        var id: Section { self }
+        var id: TabSection { self }
         
         var systemImageName: String {
             switch self {
@@ -38,37 +32,31 @@ struct ContentView: View {
                 return "list.number"
             case .candidates:
                 return "person.3.sequence.fill"
+            case .results:
+                return "trophy"
             }
         }
     }
     
     var body: some View {
         TabView(selection: $selectedSection) {
-            ForEach(Section.allCases) { section in
+            ForEach(TabSection.allCases) { section in
                 Tab(section.rawValue.capitalized, systemImage: section.systemImageName, value: section) {
                     switch section {
                     case .information:
-                        Text("Information")
+                        ElectionInformation(election: $document.election)
                     case .ballots:
-                        BallotList(ballots: document.ballots,
-                                   selectedBallotID: $selectedBallotID)
-                        .listStyle(.sidebar)
-                        .inspector(isPresented: .constant(true)) {
-                            Group {
-                                if let id = selectedBallotID {
-                                    BallotEditor(ballot: $document.binding(for: id),
-                                                 maxRank: document.election.candidates.count)
-                                } else {
-                                    Text("Select a ballot")
-                                }
-                            }
-                            .inspectorColumnWidth(min: 400, ideal: 800, max: nil)
-                        }
-                        
+                        BallotList(election: $document.election,
+                                   selection: $selectedBallotID)
                     case .candidates:
-                        Text("Candidates")
+                        CandidateList(election: $document.election,
+                                      selection: $selectedCandidate)
+                    case .results:
+                        Text("Results")
                     }
                 }
+                
+                
             }
         }
         .tabViewStyle(.sidebarAdaptable)

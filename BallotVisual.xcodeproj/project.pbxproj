@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		272117A92DF635A000D1B047 /* Balloting in Frameworks */ = {isa = PBXBuildFile; productRef = 272117A82DF635A000D1B047 /* Balloting */; };
+		275C7F632E0B094C0042F6F9 /* Balloting in Frameworks */ = {isa = PBXBuildFile; productRef = 275C7F622E0B094C0042F6F9 /* Balloting */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,6 +42,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				272117A92DF635A000D1B047 /* Balloting in Frameworks */,
+				275C7F632E0B094C0042F6F9 /* Balloting in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -84,6 +86,7 @@
 			name = BallotVisual;
 			packageProductDependencies = (
 				272117A82DF635A000D1B047 /* Balloting */,
+				275C7F622E0B094C0042F6F9 /* Balloting */,
 			);
 			productName = BallotVisual;
 			productReference = 272117912DF6350900D1B047 /* BallotVisual.app */;
@@ -114,7 +117,7 @@
 			mainGroup = 272117882DF6350900D1B047;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				272117A72DF635A000D1B047 /* XCLocalSwiftPackageReference "../../Cocoa/Frameworks/Balloting" */,
+				275C7F612E0B094C0042F6F9 /* XCLocalSwiftPackageReference "../../Frameworks/Balloting" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 272117922DF6350900D1B047 /* Products */;
@@ -349,14 +352,18 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		272117A72DF635A000D1B047 /* XCLocalSwiftPackageReference "../../Cocoa/Frameworks/Balloting" */ = {
+		275C7F612E0B094C0042F6F9 /* XCLocalSwiftPackageReference "../../Frameworks/Balloting" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = ../../Cocoa/Frameworks/Balloting;
+			relativePath = ../../Frameworks/Balloting;
 		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
 		272117A82DF635A000D1B047 /* Balloting */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Balloting;
+		};
+		275C7F622E0B094C0042F6F9 /* Balloting */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Balloting;
 		};

@@ -9,7 +9,7 @@ import SwiftUI
 import Balloting
 
 struct BallotListElement: View {
-    var ballot: RankedElection<Int, String>.Ballot
+    var ballot: Election.Ballot
     
     var body: some View {
         HStack {
