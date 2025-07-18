@@ -11,7 +11,7 @@ import Balloting
 struct CandidateList: View {
     @Binding var election: Election
     @Binding var selection: ICSOMCandidate.ID?
-    
+        
     @State var isDeletingCandidate: Bool = false
     
     var selectedCandidate: Binding<ICSOMCandidate>? {
@@ -19,35 +19,28 @@ struct CandidateList: View {
     }
     
     var body: some View {
-        GeometryReader { g in
-            HSplitView {
-                List(election.candidates, selection: $selection) { candidate in
-                    HStack {
-                        Image(systemName: "person.circle")
-                            .imageScale(.large)
-                        VStack(alignment: .leading) {
-                            Text(candidate.name)
-                            Text(String(describing: candidate.id))
-                                .font(.footnote)
-                        }
+        NavigationSplitView {
+            List(election.candidates, selection: $selection) { candidate in
+                HStack {
+                    Image(systemName: "person.circle")
+                        .imageScale(.large)
+                    VStack(alignment: .leading) {
+                        Text(candidate.name)
+                        Text(String(describing: candidate.id))
+                            .font(.footnote)
                     }
                 }
-                .listStyle(SidebarListStyle())
-                .frame(height: g.size.height)
-                .frame(minWidth: 150, maxWidth: .infinity)
-                
-                CandidateInspector(candidate: selectedCandidate,
-                                   selection: $selection)
-                .formStyle(GroupedFormStyle())
-                .frame(height: g.size.height)
-                .frame(minWidth: 400, maxWidth: .infinity)
             }
-        }
-        .frame(minWidth: 550)
-        .toolbar {
+            .navigationSplitViewColumnWidth(min: 200, ideal: 200)
+        } detail: {
+            CandidateInspector(candidate: selectedCandidate,
+                               selection: $selection)
+            .navigationSplitViewColumnWidth(min: 400, ideal: 400, max: 600)
+        }.toolbar {
             ToolbarItem(placement: .automatic) {
                 Button(action: {
                     election.candidates.append("New Candidate")
+                    selection = election.candidates.last?.id
                 }, label: {
                     Image(systemName: "plus")
                 })
@@ -81,11 +74,12 @@ struct CandidateList: View {
 struct CandidateInspector: View {
     var candidate: Binding<ICSOMCandidate>?
     @Binding var selection: ICSOMCandidate.ID?
-    
+
     var body: some View {
         if let candidate {
             Form {
                 TextField("Candidate Name", text: candidate.name)
+                
                 LabeledContent {
                     VStack(alignment: .leading) {
                         Text(String(describing: candidate.wrappedValue.id))
@@ -104,6 +98,7 @@ struct CandidateInspector: View {
                     Text("Candidate ID")
                 }
             }
+            .formStyle(GroupedFormStyle())
         } else {
             Text("No candidate selected")
         }

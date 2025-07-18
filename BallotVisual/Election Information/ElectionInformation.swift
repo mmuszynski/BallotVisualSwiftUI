@@ -14,17 +14,17 @@ struct ElectionInformation: View {
     var body: some View {
         Form {
             Section {
-                TextField("Name", text: $election.name)
-                TextField("Description", text: $election.detailDescription)
+                TextField("Name", text: $election.configuration.name)
+                TextField("Description", text: $election.configuration.detailDescription)
             }
             
             Section {
-                DatePicker("Start Date", selection: $election.beginDate)
+                DatePicker("Start Date", selection: $election.configuration.beginDate)
                 
                 HStack {
                     Spacer()
                     Button("Begin Election") {
-                        election.beginDate = Date()
+                        election.configuration.beginDate = Date()
                     }
                 }
                 

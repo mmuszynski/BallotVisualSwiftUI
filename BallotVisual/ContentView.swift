@@ -10,8 +10,7 @@ import Balloting
 
 struct ContentView: View {
     @Binding var document: ElectionDocument
-    @AppStorage("com.mmuszynski.BallotVisual.selectedSection")
-    var selectedSection: TabSection = .ballots
+    @State var selectedSection: TabSection = .information
     
     @State var selectedBallotID: Election.Ballot.ID?
     @State var selectedCandidate: ICSOMCandidate.ID?
