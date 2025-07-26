@@ -22,6 +22,7 @@ struct BallotEditor: View {
     enum Style {
         case menu
         case segmented
+        case checkbox
     }
     
     var ballot: Binding<Election.Ballot>?
@@ -30,20 +31,29 @@ struct BallotEditor: View {
     
     var body: some View {
         if let ballot {
-            VStack {
+            VStack(alignment: .leading) {
                 HStack {
-                    Text("Ballot: \(ballot.id)")
+                    Text("Ballot")
                     if ballot.wrappedValue.isValid == false {
                         Image(systemName: "exclamationmark.triangle.fill")
                     }
                 }
                 .font(.title)
-                .padding(.top)
-                if pickerStyle == .menu {
+                
+                Text("id: \(ballot.id)")
+                    .font(.title2)
+                    .padding(.bottom)
+                
+                switch pickerStyle {
+                case .menu:
                     MenuBallotEditor(ballot: ballot, maxRank: maxRank)
-                } else {
+                case .segmented:
                     SegmentedBallotEditor(ballot: ballot, maxRank: maxRank)
+                case .checkbox:
+                    CheckboxBallotEditor(ballot: ballot, maxRank: maxRank)
                 }
+                
+                Spacer()
             }
         } else {
             Text("No ballot selected")
@@ -52,7 +62,7 @@ struct BallotEditor: View {
     }
 }
 
-private struct ConcreteBallotEditor: View {
+private struct PickerBasedBallotEditor: View {
     @Binding var ballot: Election.Ballot
     var maxRank: Int
     var imageBased: Bool = false
@@ -71,7 +81,7 @@ private struct SegmentedBallotEditor: View {
     var maxRank: Int
     
     var body: some View {
-        ConcreteBallotEditor(ballot: $ballot, maxRank: maxRank, imageBased: true)
+        PickerBasedBallotEditor(ballot: $ballot, maxRank: maxRank, imageBased: true)
             .pickerStyle(.segmented)
     }
 }
@@ -81,8 +91,30 @@ private struct MenuBallotEditor: View {
     var maxRank: Int
     
     var body: some View {
-        ConcreteBallotEditor(ballot: $ballot, maxRank: maxRank)
+        PickerBasedBallotEditor(ballot: $ballot, maxRank: maxRank)
             .pickerStyle(.menu)
+    }
+}
+
+private struct CheckboxBallotEditor: View {
+    @Binding var ballot: Election.Ballot
+    var maxRank: Int
+    
+    var body: some View {
+        Form {
+            HStack {
+                Spacer()
+                ForEach(1...maxRank, id: \.self) { rank in
+                    Text("\(rank)")
+                        .frame(width: 30)
+                }
+                Text("")
+                    .frame(width: 30)
+            }
+            ForEach($ballot.rankings) { $ranking in
+                CheckboxRankingPicker(maxRanking: maxRank, ranking: $ranking)
+            }
+        }
     }
 }
 

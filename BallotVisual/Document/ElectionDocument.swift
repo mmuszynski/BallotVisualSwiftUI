@@ -56,7 +56,7 @@ struct ElectionDocument: FileDocument {
             throw CocoaError(.fileReadCorruptFile)
         }
 
-        self.election = try Election(csvRepresentation: ballotCSVString)
+        self.election = try Election(csvRepresentation: ballotCSVString, with: candidates)
         self.election.candidates = candidates
         self.election.configuration = try decoder.decode(ElectionConfiguration.self, from: configurationData)
         

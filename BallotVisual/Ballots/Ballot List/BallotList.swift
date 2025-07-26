@@ -17,22 +17,34 @@ struct BallotList: View {
     }
         
     var body: some View {
-        GeometryReader { g in
-            HSplitView {
-                List(election.ballots, selection: $selection) { ballot in
-                    BallotListElement(ballot: ballot)
+        Group {
+            if election.isCurrentlyRunning {
+                if election.ballots.isEmpty {
+                    Text("No ballots yet")
+                        .font(.largeTitle)
+                        .foregroundStyle(.tertiary)
+                } else {
+                    NavigationSplitView {
+                        List(election.ballots, selection: $selection) { ballot in
+                            BallotListElement(ballot: ballot)
+                        }
+                    } detail: {
+                        BallotEditor(ballot: selectedBallot, maxRank: election.candidates.count)
+                            .ballotEditorStyle(.checkbox)
+                            .padding()
+                    }
                 }
-                .frame(height: g.size.height)
-                .frame(minWidth: 200, idealWidth: 200, maxWidth: .infinity)
-                
-                BallotEditor(ballot: selectedBallot, maxRank: election.candidates.count)
-                    .frame(height: g.size.height)
-                    .frame(minWidth: 400, maxWidth: .infinity)
-                    .ballotEditorStyle(.segmented)
-                    .padding()
+            } else {
+                VStack {
+                    Text("Election pending")
+                        .font(.largeTitle)
+                        .padding()
+                    Text("Ballots are not available until the election has started")
+                        .font(.title3)
+                }
+                .foregroundStyle(.tertiary)
             }
         }
-        .frame(minWidth: 600)
         .toolbar {
             ToolbarItem(placement: .automatic) {
                 Button(action: {
