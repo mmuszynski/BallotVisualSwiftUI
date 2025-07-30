@@ -8,17 +8,17 @@
 import SwiftUI
 import Balloting
 
-struct BallotList: View {
-    @Binding var election: Election
-    @Binding var selection: Election.Ballot.ID?
+struct BallotList<E: RankedElectionProtocol>: View  {
+    @Binding var election: E
+    @Binding var selection: E.Ballot.ID?
     
-    var selectedBallot: Binding<Election.Ballot>? {
+    var selectedBallot: Binding<E.Ballot>? {
         $election.projectedValue.ballots.first { $0.id == selection }
     }
         
     var body: some View {
         Group {
-            if election.isCurrentlyRunning {
+            if election.isRunning {
                 if election.ballots.isEmpty {
                     Text("No ballots yet")
                         .font(.largeTitle)
@@ -48,20 +48,20 @@ struct BallotList: View {
         .toolbar {
             ToolbarItem(placement: .automatic) {
                 Button(action: {
-                    election.addEmptyBallot(id: election.ballots.count, with: election.candidates)
+                    election.addEmptyBallot(id: UUID() as! E.Ballot.ID, with: election.candidates)
                 }) {
                     Image(systemName: "plus")
                 }
-                .disabled(!election.isCurrentlyRunning)
+                .disabled(!election.isRunning)
             }
             ToolbarItem(placement: .destructiveAction) {
                 Button(action: {
-                    election.addEmptyBallot(id: election.ballots.count, with: election.candidates)
+
                 }) {
                     Image(systemName: "minus")
                 }
                 .disabled(selection == nil)
-                .disabled(!election.isCurrentlyRunning)
+                .disabled(!election.isRunning)
             }
         }
     }

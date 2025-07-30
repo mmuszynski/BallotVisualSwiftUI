@@ -6,6 +6,29 @@
 //
 
 import SwiftUI
+import Balloting
+
+struct CheckboxBallotEditor<B: RankedBallotProtocol>: View {
+    @Binding var ballot: B
+    var maxRank: Int
+    
+    var body: some View {
+        Form {
+            HStack {
+                Spacer()
+                ForEach(1...maxRank, id: \.self) { rank in
+                    Text("\(rank)")
+                        .frame(width: 30)
+                }
+                Text("")
+                    .frame(width: 30)
+            }
+            ForEach($ballot.rankings) { $ranking in
+                CheckboxRankingPicker(maxRanking: maxRank, ranking: $ranking)
+            }
+        }
+    }
+}
 
 struct CheckboxButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
@@ -26,9 +49,9 @@ struct ClearButtonStyle: ButtonStyle {
     }
 }
 
-struct CheckboxRankingPicker: View {
+struct CheckboxRankingPicker<C: Candidate>: View {
     var maxRanking: Int
-    @Binding var ranking: Election.Ballot.CandidateRanking
+    @Binding var ranking: CandidateRanking<C>
     
     var body: some View {
         HStack {
@@ -58,7 +81,11 @@ struct CheckboxRankingPicker: View {
 #Preview {
     @Previewable
     @State
-    var ranking = Election.Ballot.CandidateRanking(candidate: .init(name: "Test"))
+    var ballot = Election.Ballot(id: UUID(), rankings: [
+        .init(candidate: .init(id: UUID(), name: "Joe Smith"), rank: nil),
+        .init(candidate: .init(id: UUID(), name: "Joe Smith"), rank: nil),
+        .init(candidate: .init(id: UUID(), name: "Joe Smith"), rank: nil)
+    ])
     
-    CheckboxRankingPicker(maxRanking: 5, ranking: $ranking)
+    CheckboxBallotEditor(ballot: $ballot, maxRank: 5)
 }

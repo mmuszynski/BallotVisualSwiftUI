@@ -6,26 +6,28 @@
 //
 
 import SwiftUI
+import Balloting
 
 extension EnvironmentValues {
-    @Entry var ballotEditorStyle = BallotEditor.Style.menu
+    @Entry var ballotEditorStyle = BallotEditorStyle.menu
 }
 
 extension View {
-    func ballotEditorStyle(_ ballotEditorStyle: BallotEditor.Style) -> some View {
+    func ballotEditorStyle(_ ballotEditorStyle: BallotEditorStyle) -> some View {
         self
             .environment(\.ballotEditorStyle, ballotEditorStyle)
     }
 }
 
-struct BallotEditor: View {
-    enum Style {
-        case menu
-        case segmented
-        case checkbox
-    }
+enum BallotEditorStyle {
+    case menu
+    case segmented
+    case checkbox
+}
+
+struct BallotEditor<B: RankedBallotProtocol>: View {
     
-    var ballot: Binding<Election.Ballot>?
+    var ballot: Binding<B>?
     var maxRank: Int
     @Environment(\.ballotEditorStyle) var pickerStyle
     
@@ -62,8 +64,8 @@ struct BallotEditor: View {
     }
 }
 
-private struct PickerBasedBallotEditor: View {
-    @Binding var ballot: Election.Ballot
+private struct PickerBasedBallotEditor<B: RankedBallotProtocol>: View {
+    @Binding var ballot: B
     var maxRank: Int
     var imageBased: Bool = false
     
@@ -76,8 +78,8 @@ private struct PickerBasedBallotEditor: View {
     }
 }
 
-private struct SegmentedBallotEditor: View {
-    @Binding var ballot: Election.Ballot
+private struct SegmentedBallotEditor<B: RankedBallotProtocol>: View {
+    @Binding var ballot: B
     var maxRank: Int
     
     var body: some View {
@@ -86,8 +88,8 @@ private struct SegmentedBallotEditor: View {
     }
 }
 
-private struct MenuBallotEditor: View {
-    @Binding var ballot: Election.Ballot
+private struct MenuBallotEditor<B: RankedBallotProtocol>: View {
+    @Binding var ballot: B
     var maxRank: Int
     
     var body: some View {
@@ -96,30 +98,8 @@ private struct MenuBallotEditor: View {
     }
 }
 
-private struct CheckboxBallotEditor: View {
-    @Binding var ballot: Election.Ballot
-    var maxRank: Int
-    
-    var body: some View {
-        Form {
-            HStack {
-                Spacer()
-                ForEach(1...maxRank, id: \.self) { rank in
-                    Text("\(rank)")
-                        .frame(width: 30)
-                }
-                Text("")
-                    .frame(width: 30)
-            }
-            ForEach($ballot.rankings) { $ranking in
-                CheckboxRankingPicker(maxRanking: maxRank, ranking: $ranking)
-            }
-        }
-    }
-}
-
 #Preview {
-    @Previewable @State var selectedBallotID: Int?
+    @Previewable @State var selectedBallotID: UUID?
     @Previewable @State var document = ElectionDocument.example
 
     BallotList(election: $document.election,

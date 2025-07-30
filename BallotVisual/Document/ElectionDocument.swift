@@ -9,7 +9,7 @@ import SwiftUI
 import UniformTypeIdentifiers
 import Balloting
 
-typealias Election = RankedElection<Int, ICSOMCandidate>
+typealias Election = RankedElection<UUID, ICSOMCandidate>
 
 extension UTType {
     static var rankedChoiceElection: UTType {

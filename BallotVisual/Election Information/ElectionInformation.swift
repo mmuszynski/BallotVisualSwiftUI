@@ -8,8 +8,8 @@
 import SwiftUI
 import Balloting
 
-struct ElectionInformation: View {
-    @Binding var election: Election
+struct ElectionInformation<E: RankedElectionProtocol>: View {
+    @Binding var election: E
     
     var body: some View {
         Form {
@@ -36,7 +36,7 @@ struct ElectionInformation: View {
             
             Section {
                 Text("\(election.candidates.count) candidates")
-                Text("Status: \(election.isCurrentlyRunning ? "Running" : "Preparing")")
+                Text("Status: \(election.isRunning ? "Running" : "Preparing")")
             }
         }
         .formStyle(GroupedFormStyle())

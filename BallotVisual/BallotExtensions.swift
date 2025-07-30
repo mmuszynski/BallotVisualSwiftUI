@@ -8,7 +8,7 @@
 import Foundation
 import Balloting
 
-extension RankedBallot {
+extension RankedBallotProtocol {
     var isValid: Bool {
         let ranks = self.rankings.compactMap(\.rank)
         return ranks.count == Set(ranks).count

@@ -36,27 +36,28 @@ struct CandidateList: View {
             CandidateInspector(candidate: selectedCandidate,
                                selection: $selection)
             .navigationSplitViewColumnWidth(min: 400, ideal: 400, max: 600)
-        }.toolbar {
-            ToolbarItem(placement: .automatic) {
-                Button(action: {
-                    election.candidates.append("New Candidate")
-                    selection = election.candidates.last?.id
-                }, label: {
-                    Image(systemName: "plus")
-                })
-                .disabled(election.isCurrentlyRunning)
-                .help(election.isCurrentlyRunning ? "Cannot add or delete candidates if the election is currently running." : "Add a new candidate.")
-            }
-            ToolbarItem(placement: .destructiveAction) {
-                Button(action: {
-                    isDeletingCandidate = true
-                }, label: {
-                    Image(systemName: "minus")
-                })
-                .disabled(selection == nil || election.isCurrentlyRunning)
-                .help(election.isCurrentlyRunning ? "Cannot add or delete candidates if the election is currently running." : "Delete the selected candidate.")
-            }
         }
+//        }.toolbar {
+//            ToolbarItem(placement: .automatic) {
+//                Button(action: {
+//                    election.candidates.append("New Candidate")
+//                    selection = election.candidates.last?.id
+//                }, label: {
+//                    Image(systemName: "plus")
+//                })
+//                .disabled(election.isCurrentlyRunning)
+//                .help(election.isCurrentlyRunning ? "Cannot add or delete candidates if the election is currently running." : "Add a new candidate.")
+//            }
+//            ToolbarItem(placement: .destructiveAction) {
+//                Button(action: {
+//                    isDeletingCandidate = true
+//                }, label: {
+//                    Image(systemName: "minus")
+//                })
+//                .disabled(selection == nil || election.isCurrentlyRunning)
+//                .help(election.isCurrentlyRunning ? "Cannot add or delete candidates if the election is currently running." : "Delete the selected candidate.")
+//            }
+//        }
         .alert("Delete \(selectedCandidate?.wrappedValue.name ?? "Candidate")?",
                isPresented: $isDeletingCandidate,
                actions: {

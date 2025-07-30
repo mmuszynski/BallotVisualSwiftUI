@@ -8,9 +8,9 @@
 import SwiftUI
 import Balloting
 
-struct CandidateRankingPicker: View {
+struct CandidateRankingPicker<C: Candidate>: View {
     var maxRanking: Int
-    @Binding var ranking: Election.Ballot.CandidateRanking
+    @Binding var ranking: CandidateRanking<C>
     var imageBased: Bool = false
     
     var body: some View {
@@ -33,10 +33,10 @@ struct CandidateRankingPicker: View {
 }
 
 #Preview {
-    @Previewable @State var jeff = Election.Ballot.CandidateRanking(candidate: "Jeff", rank: nil)
-    @Previewable @State var stephen = Election.Ballot.CandidateRanking(candidate: "Stephen", rank: nil)
-    @Previewable @State var maria = Election.Ballot.CandidateRanking(candidate: "Maria", rank: nil)
-    @Previewable @State var claire = Election.Ballot.CandidateRanking(candidate: "Claire", rank: nil)
+    @Previewable @State var jeff = Election.Ballot.Ranking(candidate: "Jeff", rank: nil)
+    @Previewable @State var stephen = Election.Ballot.Ranking(candidate: "Stephen", rank: nil)
+    @Previewable @State var maria = Election.Ballot.Ranking(candidate: "Maria", rank: nil)
+    @Previewable @State var claire = Election.Ballot.Ranking(candidate: "Claire", rank: nil)
     
     Form {
         CandidateRankingPicker(maxRanking: 5, ranking: $jeff)
