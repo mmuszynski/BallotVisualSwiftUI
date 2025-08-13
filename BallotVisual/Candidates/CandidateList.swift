@@ -72,40 +72,6 @@ struct CandidateList: View {
     }
 }
 
-struct CandidateInspector: View {
-    var candidate: Binding<ICSOMCandidate>?
-    @Binding var selection: ICSOMCandidate.ID?
-
-    var body: some View {
-        if let candidate {
-            Form {
-                TextField("Candidate Name", text: candidate.name)
-                
-                LabeledContent {
-                    VStack(alignment: .leading) {
-                        Text(String(describing: candidate.wrappedValue.id))
-                        
-                        HStack {
-                            Spacer()
-                            Button(action: {
-                                candidate.wrappedValue.id = UUID()
-                                selection = candidate.wrappedValue.id
-                            }) {
-                                Text("Regenerate")
-                            }
-                        }
-                    }
-                } label: {
-                    Text("Candidate ID")
-                }
-            }
-            .formStyle(GroupedFormStyle())
-        } else {
-            Text("No candidate selected")
-        }
-    }
-}
-
 #Preview {
     @Previewable @State var election: Election = Election.example
     @Previewable @State var selection: ICSOMCandidate.ID? = nil
