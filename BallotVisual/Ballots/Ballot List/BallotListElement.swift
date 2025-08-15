@@ -27,5 +27,5 @@ struct BallotListElement: View {
 
 
 #Preview {
-    BallotListElement(ballot: Election.Ballot.example)
+    BallotListElement(ballot: RankedElection<Int, ICSOMCandidate>.Ballot.example)
 }

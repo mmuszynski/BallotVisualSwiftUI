@@ -8,13 +8,13 @@
 import SwiftUI
 import Balloting
 
-struct CandidateList: View {
-    @Binding var election: Election
-    @Binding var selection: ICSOMCandidate.ID?
+struct CandidateList<BallotID: BallotIdentifiable, CandidateType: Candidate>: View {
+    @Binding var election: RankedElection<BallotID, CandidateType>
+    @Binding var selection: CandidateType.ID?
         
     @State var isDeletingCandidate: Bool = false
     
-    var selectedCandidate: Binding<ICSOMCandidate>? {
+    var selectedCandidate: Binding<CandidateType>? {
         $election.projectedValue.candidates.first { $0.id == selection }
     }
     
@@ -36,28 +36,27 @@ struct CandidateList: View {
             CandidateInspector(candidate: selectedCandidate,
                                selection: $selection)
             .navigationSplitViewColumnWidth(min: 400, ideal: 400, max: 600)
+        }.toolbar {
+            ToolbarItem(placement: .automatic) {
+                Button(action: {
+                    election.candidates.append(CandidateType(name: "New Candidate"))
+                    selection = election.candidates.last?.id
+                }, label: {
+                    Image(systemName: "plus")
+                })
+                .disabled(election.isRunning)
+                .help(election.isRunning ? "Cannot add or delete candidates if the election is currently running." : "Add a new candidate.")
+            }
+            ToolbarItem(placement: .destructiveAction) {
+                Button(action: {
+                    isDeletingCandidate = true
+                }, label: {
+                    Image(systemName: "minus")
+                })
+                .disabled(selection == nil || election.isRunning)
+                .help(election.isRunning ? "Cannot add or delete candidates if the election is currently running." : "Delete the selected candidate.")
+            }
         }
-//        }.toolbar {
-//            ToolbarItem(placement: .automatic) {
-//                Button(action: {
-//                    election.candidates.append("New Candidate")
-//                    selection = election.candidates.last?.id
-//                }, label: {
-//                    Image(systemName: "plus")
-//                })
-//                .disabled(election.isCurrentlyRunning)
-//                .help(election.isCurrentlyRunning ? "Cannot add or delete candidates if the election is currently running." : "Add a new candidate.")
-//            }
-//            ToolbarItem(placement: .destructiveAction) {
-//                Button(action: {
-//                    isDeletingCandidate = true
-//                }, label: {
-//                    Image(systemName: "minus")
-//                })
-//                .disabled(selection == nil || election.isCurrentlyRunning)
-//                .help(election.isCurrentlyRunning ? "Cannot add or delete candidates if the election is currently running." : "Delete the selected candidate.")
-//            }
-//        }
         .alert("Delete \(selectedCandidate?.wrappedValue.name ?? "Candidate")?",
                isPresented: $isDeletingCandidate,
                actions: {
@@ -73,7 +72,7 @@ struct CandidateList: View {
 }
 
 #Preview {
-    @Previewable @State var election: Election = Election.example
+    @Previewable @State var election = RankedElection<Int, ICSOMCandidate>.example
     @Previewable @State var selection: ICSOMCandidate.ID? = nil
     
     CandidateList(election: $election, selection: $selection)

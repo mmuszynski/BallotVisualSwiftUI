@@ -33,10 +33,10 @@ struct CandidateRankingPicker<C: Candidate>: View {
 }
 
 #Preview {
-    @Previewable @State var jeff = Election.Ballot.Ranking(candidate: "Jeff", rank: nil)
-    @Previewable @State var stephen = Election.Ballot.Ranking(candidate: "Stephen", rank: nil)
-    @Previewable @State var maria = Election.Ballot.Ranking(candidate: "Maria", rank: nil)
-    @Previewable @State var claire = Election.Ballot.Ranking(candidate: "Claire", rank: nil)
+    @Previewable @State var jeff = CandidateRanking<ICSOMCandidate>(candidate: "Jeff", rank: nil)
+    @Previewable @State var stephen = CandidateRanking<ICSOMCandidate>(candidate: "Stephen", rank: nil)
+    @Previewable @State var maria = CandidateRanking<ICSOMCandidate>(candidate: "Maria", rank: nil)
+    @Previewable @State var claire = CandidateRanking<ICSOMCandidate>(candidate: "Claire", rank: nil)
     
     Form {
         CandidateRankingPicker(maxRanking: 5, ranking: $jeff)

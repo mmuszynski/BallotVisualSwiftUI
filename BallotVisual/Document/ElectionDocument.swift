@@ -9,7 +9,6 @@ import SwiftUI
 import UniformTypeIdentifiers
 import Balloting
 
-typealias Election = RankedElection<UUID, ICSOMCandidate>
 
 extension UTType {
     static var rankedChoiceElection: UTType {
@@ -17,16 +16,17 @@ extension UTType {
     }
 }
 
-struct ElectionDocument: FileDocument {
-    var election: Election
+struct ElectionDocument<BallotID: BallotIdentifiable, C: Candidate>: FileDocument {
+    typealias ElectionType = RankedElection<BallotID, C>
+    var election: ElectionType
     
     static var readableContentTypes: [UTType] { [.rankedChoiceElection] }
     
     init () {
-        self.election = Election(ballots: [])
+        self.election = ElectionType(ballots: [])
     }
     
-    init(election: Election) {
+    init(election: ElectionType) {
         self.election = election
     }
     
@@ -50,26 +50,15 @@ struct ElectionDocument: FileDocument {
             throw CocoaError(.fileReadCorruptFile)
         }
         
-        let candidates = try decoder.decode(Array<ICSOMCandidate>.self, from: candidatesData)
+        let candidates = try decoder.decode(Array<C>.self, from: candidatesData)
         
         guard let ballotCSVString = String(data: ballotCSV, encoding: .utf8) else {
             throw CocoaError(.fileReadCorruptFile)
         }
 
-        self.election = try Election(csvRepresentation: ballotCSVString, with: candidates)
+        self.election = try ElectionType(csvRepresentation: ballotCSVString, with: candidates)
         self.election.candidates = candidates
         self.election.configuration = try decoder.decode(ElectionConfiguration.self, from: configurationData)
-        
-//        //Add nil for unranked candidates for this election type
-//        let candidates = election.candidates
-//        var ballots = Set<Election.Ballot>()
-//        for ballot in election.ballots.sorted() {
-//            ballots.insert(RankedBallot(id: ballot.id, rankings: candidates.map {
-//                RankedBallot.CandidateRanking(candidate: $0, rank: ballot[$0]?.rank)
-//            }))
-//        }
-//        
-//        election.ballots = Array(ballots).sorted()
     }
     
     func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {

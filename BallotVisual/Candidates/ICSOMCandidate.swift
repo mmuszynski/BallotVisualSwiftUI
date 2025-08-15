@@ -9,8 +9,21 @@ import Foundation
 import Balloting
 
 public struct ICSOMCandidate: Candidate {
-    public var id: UUID = UUID()
-    public var name: String = "New Candidate"
+    public var id: UUID
+    public var name: String
+    
+    public init() {
+        self.init(name: "New Candidate")
+    }
+    
+    public init(name: String) {
+        self.init(id: UUID(), name: name)
+    }
+    
+    public init(id: UUID, name: String) {
+        self.id = id
+        self.name = name
+    }
 }
 
 extension ICSOMCandidate: Comparable {

@@ -9,10 +9,12 @@ import SwiftUI
 import Balloting
 
 struct ContentView: View {
-    @Binding var document: ElectionDocument
+    typealias DocumentType = ElectionDocument<UUID, ICSOMCandidate>
+    
+    @Binding var document: DocumentType
     @State var selectedSection: TabSection = .information
     
-    @State var selectedBallotID: Election.Ballot.ID?
+    @State var selectedBallotID: DocumentType.ElectionType.Ballot.ID?
     @State var selectedCandidate: ICSOMCandidate.ID?
     
     enum TabSection: String, Identifiable, CaseIterable {
@@ -64,6 +66,6 @@ struct ContentView: View {
 }
 
 #Preview {
-    @Previewable @State var document: ElectionDocument = .example
+    @Previewable @State var document = ElectionDocument<UUID, ICSOMCandidate>.example
     ContentView(document: $document)
 }

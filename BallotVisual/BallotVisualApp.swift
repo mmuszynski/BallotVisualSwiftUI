@@ -11,7 +11,7 @@ import Balloting
 @main
 struct BallotVisualApp: App {
     var body: some Scene {
-        DocumentGroup(newDocument: ElectionDocument()) { file in
+        DocumentGroup(newDocument: ElectionDocument<UUID, ICSOMCandidate>()) { file in
             ContentView(document: file.$document)
         }
     }

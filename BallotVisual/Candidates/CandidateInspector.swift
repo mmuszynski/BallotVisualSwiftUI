@@ -8,9 +8,9 @@
 import Balloting
 import SwiftUI
 
-struct CandidateInspector: View {
-    var candidate: Binding<ICSOMCandidate>?
-    @Binding var selection: ICSOMCandidate.ID?
+struct CandidateInspector<C: Candidate>: View {
+    var candidate: Binding<C>?
+    @Binding var selection: C.ID?
 
     var body: some View {
         if let candidate {
@@ -18,19 +18,7 @@ struct CandidateInspector: View {
                 TextField("Candidate Name", text: candidate.name)
                 
                 LabeledContent {
-                    VStack(alignment: .leading) {
-                        Text(String(describing: candidate.wrappedValue.id))
-                        
-                        HStack {
-                            Spacer()
-                            Button(action: {
-                                candidate.wrappedValue.id = UUID()
-                                selection = candidate.wrappedValue.id
-                            }) {
-                                Text("Regenerate")
-                            }
-                        }
-                    }
+                    Text(String(describing: candidate.wrappedValue.id))
                 } label: {
                     Text("Candidate ID")
                 }

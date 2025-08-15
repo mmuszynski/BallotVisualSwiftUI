@@ -8,6 +8,16 @@
 import SwiftUI
 import Balloting
 
+struct CheckboxButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .frame(width: 30, height: 30)
+            .background(.quaternary, in: Rectangle())
+            .border(.black, width: 2)
+            .opacity(configuration.isPressed ? 0.5 : 1)
+    }
+}
+
 struct CheckboxBallotEditor<B: RankedBallotProtocol>: View {
     @Binding var ballot: B
     var maxRank: Int
@@ -20,32 +30,11 @@ struct CheckboxBallotEditor<B: RankedBallotProtocol>: View {
                     Text("\(rank)")
                         .frame(width: 30)
                 }
-                Text("")
-                    .frame(width: 30)
             }
             ForEach($ballot.rankings) { $ranking in
                 CheckboxRankingPicker(maxRanking: maxRank, ranking: $ranking)
             }
         }
-    }
-}
-
-struct CheckboxButtonStyle: ButtonStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .frame(width: 30, height: 30)
-            .background(.quaternary, in: Rectangle())
-            .border(.black, width: 2)
-            .opacity(configuration.isPressed ? 0.5 : 1)
-    }
-}
-
-struct ClearButtonStyle: ButtonStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .frame(width: 30, height: 30)
-            .background(.quaternary, in: Circle())
-            .opacity(configuration.isPressed ? 0.5 : 1)
     }
 }
 
@@ -59,21 +48,13 @@ struct CheckboxRankingPicker<C: Candidate>: View {
             Spacer()
             ForEach(1...maxRanking, id: \.self) { index in
                 Button {
-                    ranking.rank = index
+                    ranking.rank = ranking.rank == index ? nil : index
                 } label: {
                     Image(systemName: "checkmark")
                         .opacity(ranking.rank == index ? 1 : 0)
                 }
             }
             .buttonStyle(CheckboxButtonStyle())
-            
-            //Clear button
-            Button {
-                ranking.rank = nil
-            } label: {
-                Image(systemName: "xmark")
-            }
-            .buttonStyle(ClearButtonStyle())
         }
     }
 }
@@ -81,7 +62,7 @@ struct CheckboxRankingPicker<C: Candidate>: View {
 #Preview {
     @Previewable
     @State
-    var ballot = Election.Ballot(id: UUID(), rankings: [
+    var ballot = RankedElection<UUID, ICSOMCandidate>.Ballot(id: UUID(), rankings: [
         .init(candidate: .init(id: UUID(), name: "Joe Smith"), rank: nil),
         .init(candidate: .init(id: UUID(), name: "Joe Smith"), rank: nil),
         .init(candidate: .init(id: UUID(), name: "Joe Smith"), rank: nil)

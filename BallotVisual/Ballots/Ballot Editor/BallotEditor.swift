@@ -29,7 +29,7 @@ struct BallotEditor<B: RankedBallotProtocol>: View {
     
     var ballot: Binding<B>?
     var maxRank: Int
-    @Environment(\.ballotEditorStyle) var pickerStyle
+    @Environment(\.ballotEditorStyle) var editorStyle
     
     var body: some View {
         if let ballot {
@@ -46,7 +46,7 @@ struct BallotEditor<B: RankedBallotProtocol>: View {
                     .font(.title2)
                     .padding(.bottom)
                 
-                switch pickerStyle {
+                switch editorStyle {
                 case .menu:
                     MenuBallotEditor(ballot: ballot, maxRank: maxRank)
                 case .segmented:
@@ -60,6 +60,28 @@ struct BallotEditor<B: RankedBallotProtocol>: View {
         } else {
             Text("No ballot selected")
                 .foregroundStyle(.tertiary)
+        }
+    }
+}
+
+struct PrintableBallotView<B: RankedBallotProtocol>: View {
+    var ballot: B
+    var maxRank: Int
+    var title: String = "Election"
+    
+    var body: some View {
+        VStack(alignment: .center) {
+            Text("Ballot")
+                .font(.title)
+                .padding()
+            
+            CheckboxBallotEditor(ballot: .constant(ballot), maxRank: maxRank)
+            
+            Spacer()
+    
+            Text("id: \(ballot.id)")
+                .font(.title2)
+                .padding(.bottom)
         }
     }
 }
@@ -100,8 +122,27 @@ private struct MenuBallotEditor<B: RankedBallotProtocol>: View {
 
 #Preview {
     @Previewable @State var selectedBallotID: UUID?
-    @Previewable @State var document = ElectionDocument.example
+    @Previewable @State var document = ElectionDocument<UUID, ICSOMCandidate>.example
+    BallotEditor(ballot: $document.election.ballots.first!, maxRank: 5)
+        .ballotEditorStyle(.checkbox)
+}
+
+#Preview("Printed Version", traits: .fixedLayout(width: 400, height: 600)) {
+    @Previewable @State var selectedBallotID: UUID?
+    @Previewable @State var document = ElectionDocument<UUID, ICSOMCandidate>.example
+    PrintableBallotView(ballot: document.election.ballots.first!, maxRank: 5)
+}
+
+
+#Preview {
+    @Previewable @State var selectedBallotID: UUID?
+    @Previewable @State var document = ElectionDocument<UUID, ICSOMCandidate>.example
 
     BallotList(election: $document.election,
                selection: $selectedBallotID)
+    .onAppear {
+        document.election.configuration.beginDate = .distantPast
+    }
 }
+
+

@@ -44,6 +44,6 @@ struct ElectionInformation<E: RankedElectionProtocol>: View {
 }
 
 #Preview {
-    @Previewable @State var election: Election = .example
+    @Previewable @State var election: RankedElection<Int, ICSOMCandidate> = .example
     ElectionInformation(election: $election)
 }
