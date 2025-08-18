@@ -9,11 +9,13 @@ import SwiftUI
 import Balloting
 
 struct CheckboxButtonStyle: ButtonStyle {
+    @Environment(\.backgroundStyle) var backgroundStyle
+    
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .frame(width: 30, height: 30)
-            .background(.quaternary, in: Rectangle())
-            .border(.black, width: 2)
+            .background(backgroundStyle ?? AnyShapeStyle(.quaternary), in: Rectangle())
+            .border(.foreground, width: 2)
             .opacity(configuration.isPressed ? 0.5 : 1)
     }
 }
@@ -24,15 +26,23 @@ struct CheckboxBallotEditor<B: RankedBallotProtocol>: View {
     
     var body: some View {
         Form {
-            HStack {
-                Spacer()
-                ForEach(1...maxRank, id: \.self) { rank in
-                    Text("\(rank)")
-                        .frame(width: 30)
-                }
-            }
+            CheckboxBallotEditorHeader(maxRank: maxRank)
             ForEach($ballot.rankings) { $ranking in
                 CheckboxRankingPicker(maxRanking: maxRank, ranking: $ranking)
+            }
+        }
+    }
+}
+
+struct CheckboxBallotEditorHeader: View {
+    var maxRank: Int
+    
+    var body: some View {
+        HStack {
+            Spacer()
+            ForEach(1...maxRank, id: \.self) { rank in
+                Text("\(rank)")
+                    .frame(width: 30)
             }
         }
     }

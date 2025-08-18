@@ -75,18 +75,28 @@ struct BallotList<E: RankedElectionProtocol>: View  {
                 .disabled(!election.isRunning)
             }
             ToolbarItem(placement: .automatic) {
+                let ballotSize = CGSize(width: 400, height: 600)
+                
                 Button {
                     let renderURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("ballot.pdf")
                     
+                    let ids = self.election.ballots.map(\.id) as [any BallotIdentifiable]
+                    let length = max(ids.lengthForUniqueLastCharacters, 5)
+                    
                     let ballots = self.election.ballots.compactMap { ballot in
-                        BallotEditor(ballot: .constant(ballot), maxRank: election.candidates.count)
-                            .frame(width: 400, height: 400)
-                            .border(.black)
-                            .ballotEditorStyle(.checkbox)
+                        PrintableBallotView(
+                            title: election.configuration.name,
+                            subtitle: election.configuration.detailDescription,
+                            ballot: ballot,
+                            maxRank: election.candidates.count,
+                            idString: ballot.id.truncatedIdentifier(ofLength: length)
+                        )
+                        .frame(width: ballotSize.width, height: ballotSize.height)
+                        .background(.white)
                     }
                     
                     var mediaBox = CGRect(origin: .zero,
-                                          size: CGSize(width: 800, height: 600))
+                                          size: ballotSize)
                     guard let consumer = CGDataConsumer(url: renderURL as CFURL),
                           let pdfContext =  CGContext(consumer: consumer,
                                                       mediaBox: &mediaBox, nil)
@@ -108,7 +118,7 @@ struct BallotList<E: RankedElectionProtocol>: View  {
                     
                     pdfContext.closePDF()
                     guard let doc = PDFDocument(url: renderURL),
-                          let op = doc.printOperation(for: NSPrintInfo(), scalingMode: .pageScaleNone, autoRotate: false)
+                          let op = doc.printOperation(for: NSPrintInfo(), scalingMode: .pageScaleDownToFit, autoRotate: false)
                     else {
                         print("Couldn't get document at \(renderURL)")
                         return
@@ -131,19 +141,38 @@ struct BallotList<E: RankedElectionProtocol>: View  {
     BallotList(election: $election, selection: $selection)
 }
 
-/*
- BallotList(ballots: document.ballots,
- selectedBallotID: $selectedBallotID)
- .listStyle(.sidebar)
- .inspector(isPresented: .constant(true)) {
- Group {
- if let id = selectedBallotID {
- BallotEditor(ballot: $document.binding(for: id),
- maxRank: document.election.candidates.count)
- } else {
- Text("Select a ballot")
- }
- }
- .inspectorColumnWidth(min: 400, ideal: 800, max: nil)
- }
- */
+extension BallotIdentifiable {
+    func truncatedIdentifier(ofLength length: Int) -> String {
+        let string = String(describing: self)
+        return String(string[string.index(string.endIndex, offsetBy: -length)..<string.endIndex])
+    }
+}
+
+extension Array where Element == any BallotIdentifiable {
+    //given this array of strings, what is the length n necessary
+    //such that the last n characters of every string are unique
+    func humanStrings(ofLength length: Int) -> [String] {
+        self.map { id in
+            id.truncatedIdentifier(ofLength: length)
+        }
+    }
+    
+    var lengthForUniqueLastCharacters: Int {
+        var length = 1
+        while !humanStrings(ofLength: length).isDistinct {
+            length += 1
+        }
+        return length
+    }
+}
+
+extension Sequence where Element: Hashable {
+    /// Returns true if no element is equal to any other element.
+    var isDistinct: Bool {
+        var set = Set<Element>()
+        for e in self {
+            if set.insert(e).inserted == false { return false }
+        }
+        return true
+    }
+}

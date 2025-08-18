@@ -30,6 +30,7 @@ struct BallotEditor<B: RankedBallotProtocol>: View {
     var ballot: Binding<B>?
     var maxRank: Int
     @Environment(\.ballotEditorStyle) var editorStyle
+    @FocusState var isFocused: Bool
     
     var body: some View {
         if let ballot {
@@ -60,28 +61,6 @@ struct BallotEditor<B: RankedBallotProtocol>: View {
         } else {
             Text("No ballot selected")
                 .foregroundStyle(.tertiary)
-        }
-    }
-}
-
-struct PrintableBallotView<B: RankedBallotProtocol>: View {
-    var ballot: B
-    var maxRank: Int
-    var title: String = "Election"
-    
-    var body: some View {
-        VStack(alignment: .center) {
-            Text("Ballot")
-                .font(.title)
-                .padding()
-            
-            CheckboxBallotEditor(ballot: .constant(ballot), maxRank: maxRank)
-            
-            Spacer()
-    
-            Text("id: \(ballot.id)")
-                .font(.title2)
-                .padding(.bottom)
         }
     }
 }
@@ -127,11 +106,6 @@ private struct MenuBallotEditor<B: RankedBallotProtocol>: View {
         .ballotEditorStyle(.checkbox)
 }
 
-#Preview("Printed Version", traits: .fixedLayout(width: 400, height: 600)) {
-    @Previewable @State var selectedBallotID: UUID?
-    @Previewable @State var document = ElectionDocument<UUID, ICSOMCandidate>.example
-    PrintableBallotView(ballot: document.election.ballots.first!, maxRank: 5)
-}
 
 
 #Preview {
