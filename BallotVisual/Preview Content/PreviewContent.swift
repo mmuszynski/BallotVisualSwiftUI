@@ -39,6 +39,12 @@ extension ElectionDocument where C == ICSOMCandidate, BallotID == Int {
     }
 }
 
+extension IRVRound where C == ICSOMCandidate, BallotID == Int {
+    static var example: Self {
+        try! .init(election: .example, ignoring: [])
+    }
+}
+
 /*
  ==================================================================================================
  Elections with ICSOMCandidate Type and UUID BallotID Type
@@ -60,5 +66,11 @@ extension RankedElection where C == ICSOMCandidate, BallotID == UUID {
 extension ElectionDocument where C == ICSOMCandidate, BallotID == UUID {
     static var example: Self {
         .init(election: .init(ballots: RankedElection.example.ballots))
+    }
+}
+
+extension IRVRound where C == ICSOMCandidate, BallotID == UUID {
+    static var example: Self {
+        try! .init(election: .example, ignoring: [])
     }
 }

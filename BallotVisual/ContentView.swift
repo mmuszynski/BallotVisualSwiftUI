@@ -53,7 +53,7 @@ struct ContentView: View {
                         CandidateList(election: $document.election,
                                       selection: $selectedCandidate)
                     case .results:
-                        Text("Results")
+                        ResultsView(election: document.election)
                     }
                 }
                 
